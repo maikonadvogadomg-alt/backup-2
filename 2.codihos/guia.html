@@ -1,0 +1,251 @@
+<title>Guia dos Apps do Maikon</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Fraunces:opsz,wght@9..144,700&display=swap">
+<style>
+/* Layout: uma coluna de leitura para celular; cada app numa gaveta que abre e fecha. */
+:root {
+  --bg: #f4f2ea; --papel: #fffdf6; --fg: #1f2230; --mut: #5f6372; --linha: #ddd8c4;
+  --ouro: #8a7b45; --ouro-claro: #efe7c8; --bom: #2f7a55; --bom-bg: #e4f2ea; --ruim: #a8322a; --ruim-bg: #f8e4e1; --aviso-bg: #f6eed2;
+  --f-tit: "Fraunces", Georgia, serif; --f-corpo: "Atkinson Hyperlegible", system-ui, sans-serif; --f-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #12141c; --papel: #1a1d28; --fg: #ebe8dc; --mut: #a3a6b4; --linha: #2e3242;
+  --ouro: #d2bf7d; --ouro-claro: #2b2818; --bom: #7fd3a6; --bom-bg: #17291f; --ruim: #f19a90; --ruim-bg: #331b19; --aviso-bg: #2a2516; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #12141c; --papel: #1a1d28; --fg: #ebe8dc; --mut: #a3a6b4; --linha: #2e3242;
+  --ouro: #d2bf7d; --ouro-claro: #2b2818; --bom: #7fd3a6; --bom-bg: #17291f; --ruim: #f19a90; --ruim-bg: #331b19; --aviso-bg: #2a2516; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 17px/1.6 var(--f-corpo); padding-inline: 16px; padding-block: 20px 60px; }
+main { max-width: 780px; margin: 0 auto; display: grid; gap: 18px; }
+h1, h2 { font-family: var(--f-tit); text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(30px, 8vw, 44px); }
+h2 { font-size: 22px; }
+h3 { font-size: 17px; margin: 14px 0 4px; }
+p { margin: 6px 0; max-width: 68ch; }
+ol, ul { padding-left: 22px; margin: 6px 0; } li { margin: 4px 0; }
+code { font-family: var(--f-mono); font-size: 14px; background: var(--ouro-claro); padding: 1px 6px; border-radius: 4px; word-break: break-word; }
+.olho { font: 600 12px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ouro); }
+.mut { color: var(--mut); }
+.caixa { padding: 12px 14px; border-radius: 10px; border-left: 5px solid; margin: 10px 0; }
+.caixa.bom { background: var(--bom-bg); border-color: var(--bom); }
+.caixa.ruim { background: var(--ruim-bg); border-color: var(--ruim); }
+.caixa.aviso { background: var(--aviso-bg); border-color: var(--ouro); }
+.tabela { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--linha); vertical-align: top; }
+th { font: 600 12px/1.2 var(--f-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--mut); }
+details.app { background: var(--papel); border: 1px solid var(--linha); border-radius: 12px; }
+details.app > summary { cursor: pointer; padding: 14px 16px; list-style: none; display: flex; gap: 10px; align-items: center; }
+details.app > summary::-webkit-details-marker { display: none; }
+details.app > summary::after { content: "＋"; margin-left: auto; color: var(--ouro); font-weight: 700; }
+details.app[open] > summary::after { content: "－"; }
+details.app[open] > summary { border-bottom: 1px solid var(--linha); }
+.sum-t { display: grid; } .sum-t b { font-family: var(--f-tit); font-size: 19px; } .sum-t small { color: var(--mut); font-size: 13px; }
+.dentro { padding: 6px 16px 16px; }
+.cmd { display: flex; gap: 8px; align-items: flex-start; background: var(--bg); border: 1px solid var(--linha); border-radius: 8px; padding: 8px 10px; margin: 6px 0; }
+.cmd pre { margin: 0; flex: 1; min-width: 0; white-space: pre-wrap; word-break: break-all; font: 14px/1.5 var(--f-mono); }
+.cmd button { flex: none; font: 600 13px var(--f-corpo); background: var(--ouro); color: var(--papel); border: 0; border-radius: 6px; padding: 7px 10px; cursor: pointer; }
+.cmd button:focus-visible, summary:focus-visible { outline: 3px solid var(--ouro); outline-offset: 2px; }
+.indice { display: flex; flex-wrap: wrap; gap: 6px; }
+.indice a { font-size: 14px; color: var(--fg); text-decoration: none; border: 1px solid var(--linha); border-radius: 999px; padding: 5px 11px; background: var(--papel); }
+a { color: var(--ouro); }
+</style>
+
+<main>
+  <header>
+    <span class="olho">Atualizado em 09/10/2026, 23h</span>
+    <h1>Guia dos seus apps</h1>
+    <p class="mut">Tudo o que foi feito hoje, como baixar, como instalar, como consertar e o que fazer quando der erro. Abra a parte que precisar.</p>
+  </header>
+
+  <nav class="indice" aria-label="Partes do guia">
+    <a href="#baixar">Baixar</a><a href="#arquivos">Quais arquivos</a><a href="#minisk">Mini SK</a><a href="#cacabug">Caça-Bug</a><a href="#colador">Colador</a><a href="#juridico">Jurídico</a><a href="#codelens">CodeLens</a><a href="#skv3">SK V3</a><a href="#eas">APK do Expo</a><a href="#github">Ligar o GitHub</a><a href="#seguranca">Segurança</a><a href="#erros">Quando der erro</a><a href="#pendente">Falta fazer</a>
+  </nav>
+
+  <section id="baixar">
+    <h2>1. Como baixar os arquivos</h2>
+    <div class="caixa aviso"><b>O jeito que mais funciona:</b> abra esta conversa pelo <b>Chrome, em claude.ai</b> (não pelo app do Claude) e toque nos cartões dos arquivos.</div>
+    <ul>
+      <li><b>Não baixa / para no meio:</b> memória do celular cheia. Apague os zips repetidos da pasta Download.</li>
+      <li><b>Chrome segurou o .zip:</b> menu ⋮ → <b>Downloads</b> → "Manter" ou "Baixar mesmo assim".</li>
+      <li><b>Nome repetido</b> (Mini-SK (1).zip, (2)…): apague os velhos. Os novos têm <b>data e letra no nome</b> (ex.: <code>Mini-SK-09-10-b.zip</code>). Use sempre o de letra mais adiantada.</li>
+      <li><b>Se os arquivos não abrirem mais</b> (o espaço de trabalho do Claude desliga quando fica parado): peça "gera de novo o …" na conversa.</li>
+      <li><b>Google Drive:</b> está ligado, mas por ele só cabem arquivos pequenos. Os zips grandes não cabem.</li>
+    </ul>
+  </section>
+
+  <section id="arquivos">
+    <h2>2. Quais são os arquivos certos</h2>
+    <div class="tabela"><table>
+      <thead><tr><th>Arquivo</th><th>O que é</th><th>Onde usar</th></tr></thead>
+      <tbody>
+        <tr><td><code>Mini-SK-09-10-b.zip</code></td><td>Seu editor (com Termux, Preparar, EAS, prévia TSX)</td><td>Netlify / GitHub Pages → instalar como app</td></tr>
+        <tr><td><code>Caca-Bug.zip</code> (18h20)</td><td>Caça erros, Organizar, Plano, Consertar EAS</td><td>Netlify / GitHub Pages</td></tr>
+        <tr><td><code>Colador-de-Links-09-10-a.zip</code></td><td>Colador de links refeito</td><td>Netlify (site novo)</td></tr>
+        <tr><td><code>Assistente-Juridico-local-09-10-b.zip</code></td><td>Jurídico no PC (banco na pasta <code>dados</code>)</td><td>Computador (iniciar.bat)</td></tr>
+        <tr><td><code>Assistente-Juridico-Vercel-09-10-a.zip</code></td><td>Jurídico na internet, sempre ligado</td><td>Vercel + Neon</td></tr>
+        <tr><td><code>CodeLens-local-09-10-c.zip</code></td><td>CodeLens no PC e no celular (Termux)</td><td>Computador ou Termux</td></tr>
+        <tr><td><code>SK-Editor-V3-exe-09-10-a.zip</code></td><td>SK V3 que vira programa .exe</td><td>GitHub → Actions</td></tr>
+        <tr><td><code>Pasta-1-organizada.zip</code></td><td>A pasta do Haiku já organizada</td><td>Para estudar/montar</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <details class="app" id="minisk"><summary><span class="sum-t"><b>Mini SK</b><small>versão v09/10-b — o seu editor</small></span></summary><div class="dentro">
+    <h3>Publicar e conferir</h3>
+    <ol>
+      <li>No Netlify, arraste <code>Mini-SK-09-10-b.zip</code> no mesmo site (aba Deploys).</li>
+      <li>Abra no Chrome. No topo, ao lado do nome do projeto, tem que aparecer <b>v09/10-b</b>. Se não aparecer, é uma cópia velha.</li>
+      <li>Ainda velho? Segure o ícone do app → Desinstalar → abra o site no Chrome → ⋮ → <b>Instalar app</b>.</li>
+    </ol>
+    <h3>Projetos com o mesmo nome</h3>
+    <p>Importar um zip com nome repetido NÃO apaga o anterior: o novo ganha data e hora no nome. Olhe o nome no topo antes de trabalhar. Em 🗂 Projetos dá para <b>Renomear</b> e <b>Apagar</b>.</p>
+    <h3>O que tem de novo</h3>
+    <ul>
+      <li><b>🏗️ Preparar:</b> ao importar, analisa sozinho. <b>✅ Fazer tudo</b> tira a Replit, conserta caminhos, cria manifest/ícones, Capacitor com as autorizações do Android, desktop .exe (Electron) e o <b>📋 Plano completo</b> (mostra o que falta no backend). <b>⬇ Baixar o projeto configurado</b>.</li>
+      <li><b>⚡ Node de verdade:</b> só no site (https) e no Chrome. Toque "🔒 Ligar o lacre" uma vez. Não funciona no APK. É temporário: some quando fecha.</li>
+      <li><b>📱 Termux:</b> terminal do Linux do celular, funciona no PWA e no APK. Veja os comandos abaixo.</li>
+      <li><b>☁️ EAS:</b> conserta o projeto Expo inteiro e manda gerar o APK pelo GitHub.</li>
+      <li><b>Prévia TSX:</b> abra um arquivo .tsx/.jsx e a prévia mostra só aquele componente (precisa de internet na 1ª vez).</li>
+      <li><b>📦 APK:</b> gere de novo para pegar os consertos (prévia que ficava branca, Termux). Se o celular disser "app já existe / não instalado": desinstale o antigo ou troque o <b>nome do pacote</b> (ex.: <code>com.maikon.minisk2</code>).</li>
+    </ul>
+    <h3>Termux dentro do Mini SK</h3>
+    <p>No Termux, só da 1ª vez:</p>
+    <div class="cmd"><pre>pkg install -y ttyd</pre><button type="button">Copiar</button></div>
+    <p>Toda vez (deixe o Termux aberto):</p>
+    <div class="cmd"><pre>ttyd -W -i 127.0.0.1 -p 7681 bash</pre><button type="button">Copiar</button></div>
+    <p>No Mini SK: 📱 Termux → Conectar. Se o Chrome perguntar sobre "dispositivos da rede local", toque em Permitir.</p>
+  </div></details>
+
+  <details class="app" id="cacabug"><summary><span class="sum-t"><b>Caça-Bug</b><small>achar erros, organizar bagunça, preparar Expo</small></span></summary><div class="dentro">
+    <ul>
+      <li><b>Instalar:</b> suba no Netlify/GitHub Pages e instale pelo Chrome (já vem pronto para instalar).</li>
+      <li><b>🩺 Diagnóstico → 📋 Gerar o plano completo:</b> telas, rotas, o que falta no backend, banco, variáveis.</li>
+      <li><b>🩺 Diagnóstico → ☁️ Consertar para o EAS</b> (só em projeto Expo): preencha a sua conta e devolve um zip pronto.</li>
+      <li><b>🗂️ Organizar:</b> para pasta embolada. Separa as peças, tira cópias, escolhe a melhor versão, conserta erros simples (inclusive texto de conversa colado no código) e monta a pasta <b>1-MONTADO</b>.</li>
+      <li><b>⚖️ Comparar:</b> marque 2 versões e veja o que uma tem e a outra não.</li>
+    </ul>
+  </div></details>
+
+  <details class="app" id="colador"><summary><span class="sum-t"><b>Colador de Links</b><small>refeito igual ao do Claude 4.6</small></span></summary><div class="dentro">
+    <ol>
+      <li>Suba <code>Colador-de-Links-09-10-a.zip</code> no Netlify como <b>site novo</b> (não apague o antigo ainda).</li>
+      <li>Para trazer os 37 links do antigo: no antigo, segure o dedo na lista → selecionar tudo → copiar. No novo: <b>📋 Colar vários de uma vez</b> → colar → Adicionar todos.</li>
+      <li><b>📌</b> num link = vira aba no topo. As abas ficam vivas (login, token e conversa continuam).</li>
+      <li><b>🚀 Abrir selecionados</b> = um por vez com Anterior/Próximo, Tela cheia, Abrir fora.</li>
+      <li>Faça <b>💾 Backup</b> de vez em quando.</li>
+    </ol>
+  </div></details>
+
+  <details class="app" id="juridico"><summary><span class="sum-t"><b>Assistente Jurídico</b><small>duas formas: no PC, ou na internet sempre ligado</small></span></summary><div class="dentro">
+    <h3>Forma A — no computador (<code>…local-09-10-b</code>)</h3>
+    <ol>
+      <li>Instale o <b>Node.js 22 LTS</b> (nodejs.org), uma vez.</li>
+      <li>Extraia o zip (botão direito → Extrair tudo). Não abra de dentro do zip.</li>
+      <li>Dois cliques em <code>iniciar.bat</code>. Na 1ª vez demora. Depois abre o navegador sozinho.</li>
+    </ol>
+    <div class="caixa bom"><b>Consertado hoje:</b> "só funcionava no 1º dia" (o banco ficava travado ao fechar a janela) e "porta 5000 não abre" (agora escolhe sozinho uma porta livre e mostra o endereço na janela preta).</div>
+    <p><b>Fechar do jeito certo:</b> na janela preta, <b>Ctrl + C</b> e espere. <b>Ao trocar de versão:</b> mantenha a pasta <code>dados</code> (é onde ficam os seus dados).</p>
+    <h3>Forma B — na internet, sempre ligado (<code>…Vercel-09-10-a</code>)</h3>
+    <div class="caixa ruim"><b>Erro 500 explicado:</b> o banco nunca ficava completo (faltavam tabelas e 6 colunas). Agora o servidor cria e completa o banco sozinho ao ligar.</div>
+    <ol>
+      <li><b>Neon</b> (neon.tech): crie um projeto e copie a <i>Connection string</i>. <b>É senha.</b></li>
+      <li>Mande a pasta para um repositório no GitHub.</li>
+      <li><b>Vercel</b> (vercel.com, entre com o GitHub) → Add New → Project → escolha o repositório → em Environment Variables coloque <code>DATABASE_URL</code> (do Neon) e <code>SESSION_SECRET</code> (uma frase inventada) → Deploy.</li>
+      <li>Abra o endereço <code>….vercel.app</code> → ⋮ → <b>Instalar app</b>.</li>
+    </ol>
+  </div></details>
+
+  <details class="app" id="codelens"><summary><span class="sum-t"><b>CodeLens</b><small>no PC e no celular pelo Termux (09-10-c)</small></span></summary><div class="dentro">
+    <h3>No computador</h3>
+    <p>Igual ao jurídico: Node 22, extrair, <code>iniciar.bat</code>. Também tem o conserto do banco e a porta automática.</p>
+    <h3>No celular (Termux) — uma vez só</h3>
+    <div class="cmd"><pre>termux-setup-storage</pre><button type="button">Copiar</button></div>
+    <div class="cmd"><pre>pkg install -y nodejs-lts unzip</pre><button type="button">Copiar</button></div>
+    <div class="cmd"><pre>cd ~ &amp;&amp; unzip -o storage/downloads/CodeLens-local-09-10-c.zip -d codelens</pre><button type="button">Copiar</button></div>
+    <div class="cmd"><pre>cd ~/codelens &amp;&amp; sh termux-atalho.sh</pre><button type="button">Copiar</button></div>
+    <h3>Para abrir</h3>
+    <div class="cmd"><pre>cd ~/codelens &amp;&amp; sh iniciar.sh</pre><button type="button">Copiar</button></div>
+    <p>Ou o atalho "CodeLens" do app <b>Termux:Widget</b>. Depois, no Chrome: ⋮ → <b>Instalar app</b>. Fechar: <b>Volume-baixo + C</b> no Termux.</p>
+  </div></details>
+
+  <details class="app" id="skv3"><summary><span class="sum-t"><b>SK Editor V3</b><small>vira programa .exe pela nuvem do GitHub</small></span></summary><div class="dentro">
+    <p>Funcionava "um dia só" porque rodava num endereço temporário (Replit ou ⚡ Node). O programa .exe abre sempre.</p>
+    <ol>
+      <li>Mande a pasta de <code>SK-Editor-V3-exe-09-10-a.zip</code> para um repositório (Mini SK → 🐙 GitHub).</li>
+      <li>No GitHub: <b>Actions</b> → "🖥️ SK Editor V3 — .exe (Windows)" → <b>Run workflow</b>.</li>
+      <li>Uns 10 minutos depois: abra a execução → <b>Artifacts</b> → baixe <b>SK-Editor-v3-windows</b>.</li>
+      <li>No PC: extraia e abra <b>SK-Editor-v3.exe</b>.</li>
+    </ol>
+    <p class="mut">Se ficar vermelho, mande o print do passo vermelho.</p>
+  </div></details>
+
+  <details class="app" id="eas"><summary><span class="sum-t"><b>APK de app Expo (DevMobile, jurídico Expo)</b><small>pelo EAS, com os dados da sua conta</small></span></summary><div class="dentro">
+    <p><b>Dados que você precisa (nenhum é senha):</b></p>
+    <ul>
+      <li><b>Conta do Expo (owner):</b> seu usuário no expo.dev.</li>
+      <li><b>Slug:</b> nome curto, sem espaço (ex.: <code>app-ide</code>).</li>
+      <li><b>projectId:</b> expo.dev → Projects → Create project com o mesmo slug → copie o ID.</li>
+      <li><b>Pacote Android:</b> você inventa (ex.: <code>com.maikon.devmobile</code>).</li>
+    </ul>
+    <ol>
+      <li>Caça-Bug → 🩺 Diagnóstico → <b>☁️ Consertar para o EAS</b> → preencha → baixe o zip.</li>
+      <li>Mini SK → importe o zip → <b>☁️ EAS</b> → cole o <b>token do Expo</b> (ele fica só no aparelho e vai trancado para o cofre do GitHub) → Enviar e compilar.</li>
+      <li>O APK aparece em <code>expo.dev/accounts/SUA-CONTA/projects/SLUG/builds</code>.</li>
+    </ol>
+    <div class="caixa aviso">O DevMobile ainda chama um servidor da Replit (<code>sk-code-editor.replit.app</code>) para IA, terminal e banco. O APK sai e abre, mas essas partes param quando a Replit desligar.</div>
+  </div></details>
+
+  <details class="app" id="github"><summary><span class="sum-t"><b>Ligar o GitHub ao Claude</b><small>para eu mandar direto ao repositório "Cloude"</small></span></summary><div class="dentro">
+    <p>Você já criou o repositório <code>maikonadvogadomg-alt/Cloude</code>. Falta ligar a conta:</p>
+    <ol>
+      <li>claude.ai → foto/nome → <b>Configurações</b> → <b>Conectores</b> → <b>GitHub</b> → Conectar → no GitHub: Authorize/Install → escolha <b>Cloude</b>.</li>
+      <li>Hoje essa opção não apareceu para você. Pode depender do plano ou estar em outro lugar do menu — vale procurar na ajuda: <a href="https://support.claude.com" target="_blank" rel="noopener">support.claude.com</a>.</li>
+      <li>Ligado: me diga "pronto". Aí eu mando tudo para o Cloude, e no Mini SK você puxa pelo 🐙 GitHub, sem baixar zip.</li>
+    </ol>
+    <p class="mut">Você NUNCA precisa me mandar token do GitHub. Os comandos "git remote add…" que o GitHub mostra são para computador; ignore.</p>
+  </div></details>
+
+  <section id="seguranca">
+    <h2>Segurança (vale para tudo)</h2>
+    <ul>
+      <li>Nunca mande para ninguém (nem em print): <b>tokens</b> (GitHub, Expo), <b>chaves de IA</b>, <b>senha do banco</b> (DATABASE_URL), arquivos <code>.env</code>, <code>.pem</code>, <code>.key</code>, <code>.keystore</code>.</li>
+      <li>Eles vão só: dentro do próprio app (🔑), no cofre do GitHub (Secrets) ou nas variáveis da Vercel.</li>
+      <li>Se um token apareceu num print ou arquivo: apague-o no site e crie outro.</li>
+      <li>SQL que começa com <code>DROP TABLE</code> APAGA tabelas. Só rode em banco vazio.</li>
+    </ul>
+  </section>
+
+  <section id="erros">
+    <h2>Quando der erro: o que mandar</h2>
+    <ul>
+      <li><b>Janela preta do PC:</b> print das últimas linhas antes de fechar.</li>
+      <li><b>GitHub Actions vermelho:</b> print do passo vermelho aberto.</li>
+      <li><b>App em branco:</b> no Mini SK, a prévia mostra os erros (botão ▤) e o 🏗️ Preparar tem "🤖 Mandar os erros para a IA".</li>
+      <li><b>EAS:</b> a página do build no expo.dev (topo + parte vermelha). Sem o token.</li>
+      <li>Sempre diga <b>como abriu</b> (site, app instalado, .bat, Termux) e <b>qual versão</b> (a letra no nome).</li>
+    </ul>
+  </section>
+
+  <section id="pendente">
+    <h2>Falta fazer (quando você voltar)</h2>
+    <ul>
+      <li>Mandar o <b>briefing do Haiku</b> (as 2 mil linhas, inteiro) + o guia interativo → eu monto o projeto limpo e modular.</li>
+      <li>Mandar a <b>conversa grande do Haiku</b> → ensino o Caça-Bug a aplicar os "substitua / adicione" na ordem.</li>
+      <li>Hub do Haiku (pasta MONTADO): falta o <code>editor.js</code> e ligar os botões dos módulos novos.</li>
+      <li>Colocar o Colador dentro do 🔗 Links do Mini SK.</li>
+      <li>O "executável pequenininho" da Replit: quando achar a explicação do Haiku, mande para comparar.</li>
+    </ul>
+  </section>
+</main>
+
+<script>
+document.addEventListener('click', async (e) => {
+  const b = e.target.closest('.cmd button'); if (!b) return;
+  const t = b.parentElement.querySelector('pre').textContent;
+  try { await navigator.clipboard.writeText(t); b.textContent = 'Copiado'; }
+  catch (err) { const r = document.createRange(); r.selectNodeContents(b.parentElement.querySelector('pre')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Selecionado'; }
+  setTimeout(() => (b.textContent = 'Copiar'), 1500);
+});
+// abre a gaveta quando vem do índice
+document.querySelectorAll('.indice a').forEach((a) => a.addEventListener('click', () => { const d = document.querySelector(a.getAttribute('href')); if (d && d.tagName === 'DETAILS') d.open = true; }));
+</script>
