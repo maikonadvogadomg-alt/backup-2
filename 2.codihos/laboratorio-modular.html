@@ -1,0 +1,393 @@
+<title>Laboratório do Modular</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: uma coluna de leitura; o "trem" de módulos corre na horizontal (rola dentro da própria faixa). */
+:root {
+  --bg: #eef1ec; --papel: #f8faf6; --fg: #1d2927; --mut: #56645f; --linha: #c9d2cb;
+  --sinal: #d99a00; --sinal-txt: #241a00; --trilho: #2f6b5a; --erro: #b42318; --erro-bg: #fbe9e6; --ok-bg: #e3f1ea;
+  --vagao: #ffffff; --vagao-off: #e4e8e3; --loco: #2f6b5a; --loco-txt: #f3fbf7; --ultimo: #3d4f73; --ultimo-txt: #eef2fb;
+  --tela-bg: #ffffff;
+  --f-display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --f-corpo: "Atkinson Hyperlegible", "Segoe UI", Roboto, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121918; --papel: #19221f; --fg: #e4ebe6; --mut: #9aaba4; --linha: #2e3c38;
+  --sinal: #f0b429; --sinal-txt: #1c1400; --trilho: #5fb39a; --erro: #ff8a7a; --erro-bg: #3a1d1a; --ok-bg: #16302a;
+  --vagao: #22302c; --vagao-off: #1a2320; --loco: #3f8a74; --loco-txt: #f3fbf7; --ultimo: #4c6293; --ultimo-txt: #eef2fb;
+  --tela-bg: #fbfbf8; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #121918; --papel: #19221f; --fg: #e4ebe6; --mut: #9aaba4; --linha: #2e3c38;
+  --sinal: #f0b429; --sinal-txt: #1c1400; --trilho: #5fb39a; --erro: #ff8a7a; --erro-bg: #3a1d1a; --ok-bg: #16302a;
+  --vagao: #22302c; --vagao-off: #1a2320; --loco: #3f8a74; --loco-txt: #f3fbf7; --ultimo: #4c6293; --ultimo-txt: #eef2fb;
+  --tela-bg: #fbfbf8; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 17px/1.6 var(--f-corpo); padding-inline: 16px; padding-block: 24px 64px; }
+main { max-width: 860px; margin: 0 auto; display: grid; gap: 40px; }
+h1, h2 { font-family: var(--f-display); text-transform: uppercase; letter-spacing: .02em; text-wrap: balance; margin: 0; line-height: 1; }
+h1 { font-size: clamp(44px, 11vw, 84px); font-weight: 900; }
+h2 { font-size: clamp(28px, 6vw, 40px); font-weight: 700; }
+h3 { margin: 0; font-size: 18px; }
+p { margin: 0; max-width: 65ch; }
+.olho { font: 600 12px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--trilho); }
+.secao { display: grid; gap: 16px; }
+.mut { color: var(--mut); }
+code, pre { font-family: var(--f-mono); font-size: 14px; }
+:not(pre) > code { background: var(--papel); border: 1px solid var(--linha); padding: 1px 6px; border-radius: 4px; }
+
+/* faixa da sinalização */
+.placa { display: inline-flex; align-items: center; gap: 10px; background: var(--sinal); color: var(--sinal-txt); font: 700 14px/1 var(--f-mono); padding: 8px 12px; border-radius: 3px; width: fit-content; }
+.placa::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--sinal-txt); }
+
+/* ── o trem ── */
+.faixa { overflow-x: auto; padding-block: 8px 4px; }
+.trem { display: flex; align-items: flex-end; gap: 0; min-width: max-content; padding-bottom: 14px; background: linear-gradient(var(--linha), var(--linha)) bottom 4px left 0 / 100% 3px no-repeat; }
+.vagao { position: relative; width: 138px; min-height: 92px; margin-right: 18px; padding: 10px 10px 18px; border: 2px solid var(--fg); border-radius: 6px 6px 3px 3px; background: var(--vagao); display: grid; gap: 4px; align-content: start; transition: opacity .2s; }
+.vagao::before, .vagao::after { content: ""; position: absolute; bottom: -12px; width: 18px; height: 18px; border-radius: 50%; background: var(--fg); border: 4px solid var(--bg); }
+.vagao::before { left: 14px; } .vagao::after { right: 14px; }
+.vagao + .vagao > .engate { position: absolute; left: -20px; bottom: 22px; width: 20px; height: 3px; background: var(--fg); }
+.vagao.loco { background: var(--loco); color: var(--loco-txt); border-color: var(--loco); border-radius: 18px 6px 3px 3px; }
+.vagao.ultimo { background: var(--ultimo); color: var(--ultimo-txt); border-color: var(--ultimo); }
+.vagao.off { background: var(--vagao-off); opacity: .55; border-style: dashed; }
+.vagao.quebrado { outline: 3px solid var(--erro); outline-offset: 2px; }
+.vagao .arq { font: 600 12px/1.2 var(--f-mono); word-break: break-all; }
+.vagao .nome { font-size: 14px; line-height: 1.25; }
+.vagao .num { position: absolute; top: -11px; right: 8px; font: 700 11px/1 var(--f-mono); background: var(--bg); color: var(--fg); border: 1px solid var(--fg); padding: 3px 5px; border-radius: 3px; }
+
+/* ── painel de controle ── */
+.lab { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+@media (max-width: 720px) { .lab { grid-template-columns: minmax(0, 1fr); } }
+.lista { display: grid; gap: 8px; }
+.linha { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; background: var(--papel); border: 1px solid var(--linha); border-radius: 6px; padding: 8px 10px; }
+.linha .info { min-width: 0; }
+.linha .info b { display: block; font: 600 13px/1.3 var(--f-mono); word-break: break-all; }
+.linha .info span { font-size: 14px; color: var(--mut); }
+.botoes { display: flex; gap: 4px; }
+button { font: 600 15px/1 var(--f-corpo); color: var(--fg); background: var(--papel); border: 1.5px solid var(--fg); border-radius: 5px; padding: 9px 12px; cursor: pointer; min-height: 40px; }
+button:hover { background: var(--bg); }
+button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 3px solid var(--sinal); outline-offset: 2px; }
+button.forte { background: var(--fg); color: var(--bg); }
+button.forte:hover { opacity: .9; background: var(--fg); }
+button.mini { min-height: 36px; min-width: 36px; padding: 6px 8px; font-size: 14px; }
+.chave { position: relative; width: 46px; height: 26px; flex: none; }
+.chave input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.chave span { position: absolute; inset: 0; border-radius: 13px; background: var(--linha); transition: background .15s; }
+.chave span::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--papel); transition: transform .15s; }
+.chave input:checked + span { background: var(--trilho); }
+.chave input:checked + span::after { transform: translateX(20px); }
+.chave input:focus-visible + span { outline: 3px solid var(--sinal); outline-offset: 2px; }
+
+.tela-box { display: grid; gap: 8px; }
+.tela-box iframe { width: 100%; height: 310px; border: 2px solid var(--fg); border-radius: 6px; background: var(--tela-bg); }
+.relato { display: grid; gap: 6px; }
+.msg { padding: 10px 12px; border-radius: 6px; font-size: 15px; line-height: 1.45; border-left: 5px solid; }
+.msg.ok { background: var(--ok-bg); border-color: var(--trilho); }
+.msg.erro { background: var(--erro-bg); border-color: var(--erro); }
+.msg.aviso { background: var(--papel); border-color: var(--sinal); }
+
+.cenarios { display: flex; flex-wrap: wrap; gap: 8px; }
+
+pre.codigo { margin: 0; background: var(--papel); border: 1px solid var(--linha); border-radius: 6px; padding: 12px; overflow-x: auto; line-height: 1.5; }
+textarea { width: 100%; min-height: 230px; font: 14px/1.5 var(--f-mono); color: var(--fg); background: var(--papel); border: 1.5px solid var(--fg); border-radius: 6px; padding: 12px; resize: vertical; }
+.regras { display: grid; gap: 12px; counter-reset: r; padding: 0; margin: 0; list-style: none; }
+.regras li { counter-increment: r; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; align-items: start; }
+.regras li::before { content: counter(r); font: 900 34px/1 var(--f-display); color: var(--trilho); text-align: center; }
+.arquivos { display: grid; gap: 12px; }
+details { background: var(--papel); border: 1px solid var(--linha); border-radius: 6px; }
+details summary { cursor: pointer; padding: 10px 12px; font: 600 14px/1.3 var(--f-mono); }
+details[open] summary { border-bottom: 1px solid var(--linha); }
+details .dentro { padding: 12px; display: grid; gap: 8px; }
+details pre.codigo { border: 0; padding: 0; background: none; }
+.tabela-rolar { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--linha); vertical-align: top; }
+th { font: 600 12px/1.2 var(--f-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--mut); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<main>
+  <header class="secao">
+    <span class="olho">Mini SK · aula prática</span>
+    <h1>Laboratório do Modular</h1>
+    <p>Um projeto modular é um <b>trem</b>. A página (<code>index.html</code>) é o trilho. Cada arquivo da pasta <code>js/</code> é um vagão. Lá embaixo no index, cada linha <code>&lt;script src="js/…"&gt;</code> engata um vagão, <b>na ordem em que aparece</b>. Aqui você liga, desliga e muda a ordem dos vagões e vê na hora o que acontece.</p>
+  </header>
+
+  <section class="secao" aria-labelledby="t-trem">
+    <span class="placa">Linha 1</span>
+    <h2 id="t-trem">O trem montado agora</h2>
+    <div class="faixa"><div class="trem" id="trem"></div></div>
+    <p class="mut">Verde é a locomotiva (<code>00-core.js</code>): ela cria o “caixa comum” que todo mundo usa. Azul é o último vagão (<code>99-app.js</code>): ele olha quem embarcou e monta a tela. Os do meio são as ferramentas.</p>
+  </section>
+
+  <section class="secao" aria-labelledby="t-lab">
+    <span class="placa">Linha 2</span>
+    <h2 id="t-lab">Mexa e veja</h2>
+    <div class="lab">
+      <div class="lista" id="lista"></div>
+      <div class="tela-box">
+        <h3>O que aparece na tela</h3>
+        <iframe id="tela" title="Resultado do trem montado" sandbox="allow-scripts"></iframe>
+        <div class="relato" id="relato" aria-live="polite"></div>
+      </div>
+    </div>
+    <h3>Provoque um defeito de propósito</h3>
+    <div class="cenarios">
+      <button type="button" id="c-sem-loco">Tirar a locomotiva</button>
+      <button type="button" id="c-app-cedo">Último vagão no começo</button>
+      <button type="button" id="c-quebrar">Quebrar o vagão do contador</button>
+      <button type="button" class="forte" id="c-reset">Voltar ao normal</button>
+    </div>
+  </section>
+
+  <section class="secao" aria-labelledby="t-meu">
+    <span class="placa">Linha 3</span>
+    <h2 id="t-meu">Faça o seu vagão</h2>
+    <p>Este é um módulo inteiro. Ele só precisa de três coisas: começar com <code>(function (APP) {</code>, chamar <code>APP.registrar(…)</code> com um nome, um ícone e o que fazer, e terminar com <code>})(window.APP);</code>. Troque o texto, a cor ou o ícone e toque em <b>Engatar</b>.</p>
+    <label for="meu-codigo" class="mut">js/50-meu-vagao.js</label>
+    <textarea id="meu-codigo" spellcheck="false"></textarea>
+    <div class="cenarios">
+      <button type="button" class="forte" id="engatar">Engatar no trem</button>
+      <button type="button" id="desengatar">Tirar o meu vagão</button>
+      <button type="button" id="copiar-meu">Copiar o código</button>
+    </div>
+  </section>
+
+  <section class="secao" aria-labelledby="t-regras">
+    <span class="placa">Linha 4</span>
+    <h2 id="t-regras">As 4 regras</h2>
+    <ol class="regras">
+      <li><p><b>A locomotiva vai primeiro.</b> O <code>00-core.js</code> cria o <code>APP</code>, o caixa comum. Vagão que vem antes dela não acha o caixa e para (“APP is not defined”).</p></li>
+      <li><p><b>Um vagão, um arquivo, um assunto.</b> Se um quebra, só ele para. Os outros seguem rodando. É a grande vantagem do modular: o defeito fica preso num lugar só.</p></li>
+      <li><p><b>Vagão não mexe no outro.</b> Eles conversam só pelo caixa comum (<code>APP.registrar</code>, <code>APP.avisar</code>). Por isso dá para tirar ou trocar um sem desmontar o resto.</p></li>
+      <li><p><b>O último vagão liga tudo.</b> O <code>99-app.js</code> vem por último porque precisa que todos já tenham embarcado. Se ele vier antes, monta a tela sem os que chegaram depois.</p></li>
+    </ol>
+  </section>
+
+  <section class="secao" aria-labelledby="t-haiku">
+    <span class="placa">Linha 5</span>
+    <h2 id="t-haiku">Tradução do que o Haiku dizia</h2>
+    <div class="tabela-rolar"><table>
+      <thead><tr><th>Ele falava</th><th>Quer dizer</th></tr></thead>
+      <tbody>
+        <tr><td>“Coloque antes do <code>&lt;/body&gt;</code>”</td><td>Cole lá embaixo, antes da etiqueta que fecha a página. É o lugar dos vagões.</td></tr>
+        <tr><td><code>&lt;script&gt; … &lt;/script&gt;</code> com código dentro</td><td>Um vagão colado <b>dentro</b> da página. Funciona, mas o index fica gigante.</td></tr>
+        <tr><td><code>&lt;script src="js/nome.js"&gt;&lt;/script&gt;</code></td><td>O mesmo vagão guardado <b>num arquivo separado</b>. O index só chama. É o jeito do Mini SK.</td></tr>
+        <tr><td><code>&lt;style&gt; … &lt;/style&gt;</code> junto do módulo</td><td>A cor e o desenho daquele módulo (CSS). Pode ir para <code>css/</code> ou o próprio vagão pode trazer, como o contador aqui faz.</td></tr>
+        <tr><td>“Substitua o módulo X”</td><td>Troque o arquivo inteiro daquele vagão. Os outros ficam como estão.</td></tr>
+        <tr><td>Arquivo <code>.bat</code></td><td>Lista de comandos do Windows (dois cliques no computador). No celular não serve. Não é vagão.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="secao" aria-labelledby="t-arq">
+    <span class="placa">Linha 6</span>
+    <h2 id="t-arq">Os arquivos deste trem</h2>
+    <p>Para montar este projetinho de verdade no Mini SK: crie a pasta <code>js/</code>, um arquivo para cada vagão abaixo (copie e cole) e o <code>index.html</code>. Abra o index e funciona.</p>
+    <div class="arquivos" id="arquivos"></div>
+  </section>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  // ── os vagões (código de verdade, que roda na tela ao lado) ─────────────────
+  const CORE = `// js/00-core.js — A LOCOMOTIVA
+// Cria o "caixa comum" (APP) que todos os vagões usam.
+window.APP = {
+  modulos: [],
+  montado: false,
+  registrar: function (m) {
+    this.modulos.push(m);
+    if (this.montado) avisarPai('atrasado', m.nome);
+  },
+  avisar: function (texto) {
+    document.getElementById('aviso').textContent = texto;
+  }
+};`;
+  const SAUDACAO = `// js/10-saudacao.js — um vagão
+(function (APP) {
+  APP.registrar({
+    nome: 'Saudação',
+    icone: '👋',
+    rodar: function (tela) {
+      var h = new Date().getHours();
+      tela.textContent = h < 12 ? 'Bom dia, Maikon!' : h < 18 ? 'Boa tarde, Maikon!' : 'Boa noite, Maikon!';
+    }
+  });
+})(window.APP);`;
+  const CONTADOR = `// js/20-contador.js — um vagão que traz a própria cor (CSS)
+(function (APP) {
+  var estilo = document.createElement('style');
+  estilo.textContent = '.contador{font-size:40px;font-weight:700;color:#2f6b5a}';
+  document.head.appendChild(estilo);
+  var n = 0;
+  APP.registrar({
+    nome: 'Contador',
+    icone: '🔢',
+    rodar: function (tela) {
+      n = n + 1;
+      tela.innerHTML = '<div class="contador">' + n + '</div>';
+      APP.avisar('Você tocou ' + n + ' vez(es).');
+    }
+  });
+})(window.APP);`;
+  const RELOGIO = `// js/30-relogio.js — um vagão
+(function (APP) {
+  APP.registrar({
+    nome: 'Relógio',
+    icone: '⏰',
+    rodar: function (tela) {
+      tela.textContent = 'Agora são ' + new Date().toLocaleTimeString('pt-BR');
+    }
+  });
+})(window.APP);`;
+  const APPJS = `// js/99-app.js — O ÚLTIMO VAGÃO
+// Olha quem embarcou e cria um botão para cada um.
+(function (APP) {
+  var barra = document.getElementById('barra');
+  var tela = document.getElementById('tela');
+  APP.modulos.forEach(function (m) {
+    var b = document.createElement('button');
+    b.textContent = m.icone + ' ' + m.nome;
+    b.onclick = function () { m.rodar(tela); };
+    barra.appendChild(b);
+  });
+  APP.montado = true;
+  APP.avisar(APP.modulos.length + ' vagão(ões) embarcado(s). Toque num botão.');
+  avisarPai('pronto', APP.modulos.map(function (m) { return m.nome; }));
+})(window.APP);`;
+  const MEU_PADRAO = `// js/50-meu-vagao.js — o SEU vagão
+(function (APP) {
+  APP.registrar({
+    nome: 'Meu vagão',
+    icone: '⚖️',
+    rodar: function (tela) {
+      tela.innerHTML = '<b style="color:#3d4f73">Funcionou! Este vagão é meu.</b>';
+      APP.avisar('Meu primeiro módulo rodou.');
+    }
+  });
+})(window.APP);`;
+  const QUEBRADO = CONTADOR.replace("n = n + 1;", "n = n + 1;;  tela.innerHTML = ('<div class=\"contador\">' + n;  // ← faltou fechar o parêntese");
+
+  const PADRAO = () => [
+    { arq: '00-core.js', nome: 'Locomotiva: cria o caixa comum', tipo: 'loco', on: true, code: CORE },
+    { arq: '10-saudacao.js', nome: 'Saudação', tipo: 'mod', on: true, code: SAUDACAO },
+    { arq: '20-contador.js', nome: 'Contador (traz a própria cor)', tipo: 'mod', on: true, code: CONTADOR },
+    { arq: '30-relogio.js', nome: 'Relógio', tipo: 'mod', on: true, code: RELOGIO },
+    { arq: '99-app.js', nome: 'Último vagão: monta a tela', tipo: 'ultimo', on: true, code: APPJS },
+  ];
+  let trem = PADRAO();
+  let quebrados = new Set();
+
+  // ── página que roda dentro do quadro ────────────────────────────────────────
+  const CABECA = '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
+    '<style>body{font:16px/1.5 system-ui,sans-serif;margin:0;padding:12px;color:#1d2927;background:#fbfbf8}#barra{display:flex;flex-wrap:wrap;gap:6px}#barra button{font:inherit;padding:8px 10px;border:1.5px solid #1d2927;border-radius:5px;background:#fff;cursor:pointer}#tela{min-height:70px;margin:12px 0;padding:12px;border:1px dashed #9aa;border-radius:6px}#aviso{color:#56645f;font-size:14px}</style></head><body>' +
+    '<div id="barra"></div><div id="tela">(a tela das ferramentas)</div><div id="aviso"></div>' +
+    '<script>var __vagao="";function avisarPai(t,d){parent.postMessage({lab:1,tipo:t,dado:d,vagao:__vagao},"*")}' +
+    'window.onerror=function(m){avisarPai("erro",String(m));return true};<\/script>';
+
+  function montarHTML() {
+    let h = CABECA;
+    for (const v of trem) if (v.on) {
+      h += '<script>__vagao=' + JSON.stringify(v.arq) + '<\/script>\n';
+      h += '<script>/* ' + v.arq + ' */\n' + v.code.replace(/<\/script/gi, '<\\/script') + '\n<\/script>\n';
+    }
+    h += '<script>__vagao="";setTimeout(function(){avisarPai("fim",null)},50)<\/script></body></html>';
+    return h;
+  }
+
+  // ── relato em português simples ─────────────────────────────────────────────
+  let relato = [];
+  function traduzir(vagao, m) {
+    if (/APP is not defined|reading 'registrar'|reading 'modulos'|Cannot read properties of undefined/i.test(m))
+      return 'O vagão <b>' + esc(vagao) + '</b> não achou a locomotiva. Ela está desligada ou veio <b>depois</b> dele. Regra 1: a locomotiva vai primeiro.';
+    if (/SyntaxError|Unexpected|missing|Invalid or unexpected/i.test(m))
+      return 'O vagão <b>' + esc(vagao) + '</b> tem um erro de escrita (faltou fechar um parêntese, uma chave ou uma aspa). Só ele parou; os outros seguem rodando.';
+    if (/avisarPai is not defined/.test(m)) return 'O vagão <b>' + esc(vagao) + '</b> usou algo que não existe aqui.';
+    return 'O vagão <b>' + esc(vagao) + '</b> deu este erro: <code>' + esc(m) + '</code>';
+  }
+  window.addEventListener('message', (e) => {
+    const d = e.data; if (!d || !d.lab || e.source !== $('#tela').contentWindow) return;
+    if (d.tipo === 'erro') { if (d.vagao) quebrados.add(d.vagao); relato.push(['erro', traduzir(d.vagao || 'sem nome', d.dado)]); }
+    if (d.tipo === 'atrasado') relato.push(['aviso', 'O vagão <b>' + esc(d.vagao) + '</b> embarcou <b>depois</b> do último vagão. A tela já estava montada, então o botão dele não aparece. Regra 4: o <code>99-app.js</code> vai por último.']);
+    if (d.tipo === 'pronto' && !d.dado.length) relato.push(['aviso', 'O último vagão montou a tela, mas <b>ninguém tinha embarcado ainda</b>. Por isso a tela ficou sem botões.']);
+    else if (d.tipo === 'pronto') relato.push(['ok', 'Tudo certo: ' + d.dado.length + ' ferramenta(s) na tela (' + esc(d.dado.join(', ')) + ').']);
+    if (d.tipo === 'fim') pintarRelato(true);
+  });
+  function pintarRelato(fim) {
+    const ultimoOn = trem.some((v) => v.tipo === 'ultimo' && v.on);
+    if (fim && !ultimoOn) relato.push(['aviso', 'O último vagão está desligado. Os módulos embarcaram, mas ninguém montou a tela. Por isso não aparece botão nenhum.']);
+    if (fim && !relato.length) relato.push(['aviso', 'Nada aconteceu.']);
+    $('#relato').innerHTML = relato.map(([k, t]) => '<div class="msg ' + k + '">' + t + '</div>').join('');
+    pintarTrem();
+  }
+
+  // ── desenho do trem e da lista ──────────────────────────────────────────────
+  function pintarTrem() {
+    $('#trem').innerHTML = trem.map((v, i) =>
+      '<div class="vagao ' + (v.tipo === 'loco' ? 'loco ' : v.tipo === 'ultimo' ? 'ultimo ' : '') + (v.on ? '' : 'off ') + (quebrados.has(v.arq) ? 'quebrado' : '') + '">' +
+      (i ? '<span class="engate"></span>' : '') + '<span class="num">' + (i + 1) + 'º</span>' +
+      '<span class="arq">' + esc(v.arq) + '</span><span class="nome">' + esc(v.nome) + (v.on ? '' : ' — desligado') + '</span></div>').join('');
+  }
+  function pintarLista() {
+    $('#lista').innerHTML = trem.map((v, i) =>
+      '<div class="linha"><label class="chave" title="Ligar ou desligar"><input type="checkbox" id="on-' + i + '" data-on="' + i + '"' + (v.on ? ' checked' : '') + ' aria-label="Ligar ' + esc(v.arq) + '"><span></span></label>' +
+      '<div class="info"><b>' + (i + 1) + 'º · ' + esc(v.arq) + '</b><span>' + esc(v.nome) + '</span></div>' +
+      '<div class="botoes"><button type="button" class="mini" data-sobe="' + i + '" aria-label="Subir"' + (i ? '' : ' disabled') + '>↑</button><button type="button" class="mini" data-desce="' + i + '" aria-label="Descer"' + (i < trem.length - 1 ? '' : ' disabled') + '>↓</button></div></div>').join('');
+  }
+  function pintarArquivos() {
+    const idx = '<!doctype html>\n<html lang="pt-BR">\n<head>\n  <meta charset="utf-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1">\n  <title>Meu trem</title>\n</head>\n<body>\n  <div id="barra"></div>\n  <div id="tela">(a tela das ferramentas)</div>\n  <div id="aviso"></div>\n\n  <!-- os vagões, NA ORDEM (é aqui o "antes do </body>") -->\n  <script>function avisarPai(){}<\/script>\n' +
+      trem.filter((v) => v.on).map((v) => '  <script src="js/' + v.arq + '"><\/script>').join('\n') + '\n</body>\n</html>';
+    const lista = [{ arq: 'index.html', code: idx }].concat(trem.filter((v) => v.on).map((v) => ({ arq: 'js/' + v.arq, code: v.code })));
+    $('#arquivos').innerHTML = lista.map((f, i) => '<details' + (i === 0 ? ' open' : '') + '><summary>' + esc(f.arq) + '</summary><div class="dentro"><pre class="codigo">' + esc(f.code) + '</pre><button type="button" data-copiar="' + i + '">Copiar ' + esc(f.arq) + '</button></div></details>').join('');
+    $('#arquivos').__lista = lista;
+  }
+  function rodar() {
+    relato = []; quebrados = new Set();
+    $('#relato').innerHTML = '<div class="msg aviso">Montando o trem…</div>';
+    $('#tela').srcdoc = montarHTML();
+    pintarTrem(); pintarLista(); pintarArquivos();
+  }
+
+  // ── controles ───────────────────────────────────────────────────────────────
+  $('#lista').addEventListener('change', (e) => { const i = e.target.dataset.on; if (i != null) { trem[+i].on = e.target.checked; rodar(); } });
+  $('#lista').addEventListener('click', (e) => {
+    const s = e.target.closest('[data-sobe]'), d = e.target.closest('[data-desce]');
+    if (s) { const i = +s.dataset.sobe; [trem[i - 1], trem[i]] = [trem[i], trem[i - 1]]; rodar(); }
+    if (d) { const i = +d.dataset.desce; [trem[i + 1], trem[i]] = [trem[i], trem[i + 1]]; rodar(); }
+  });
+  $('#c-sem-loco').onclick = () => { trem = PADRAO(); trem[0].on = false; rodar(); };
+  $('#c-app-cedo').onclick = () => { trem = PADRAO(); const u = trem.pop(); trem.splice(1, 0, u); rodar(); };
+  $('#c-quebrar').onclick = () => { trem = PADRAO(); trem[2].code = QUEBRADO; trem[2].nome = 'Contador (com defeito)'; rodar(); };
+  $('#c-reset').onclick = () => { const meu = trem.find((v) => v.meu); trem = PADRAO(); if (meu) trem.splice(trem.length - 1, 0, meu); rodar(); };
+
+  const ta = $('#meu-codigo');
+  let rascunho = null; try { rascunho = localStorage.getItem('lab-meu-vagao'); } catch (e) {}
+  ta.value = rascunho || MEU_PADRAO;
+  ta.addEventListener('input', () => { try { localStorage.setItem('lab-meu-vagao', ta.value); } catch (e) {} });
+  $('#engatar').onclick = () => {
+    const v = { arq: '50-meu-vagao.js', nome: 'O seu vagão', tipo: 'mod', on: true, code: ta.value, meu: true };
+    const j = trem.findIndex((x) => x.meu);
+    if (j >= 0) trem[j] = v; else { const u = trem.findIndex((x) => x.tipo === 'ultimo'); trem.splice(u >= 0 ? u : trem.length, 0, v); }
+    rodar();
+    $('#t-lab').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  $('#desengatar').onclick = () => { trem = trem.filter((x) => !x.meu); rodar(); };
+
+  async function copiar(texto, botao) {
+    const antes = botao.textContent;
+    try { await navigator.clipboard.writeText(texto); botao.textContent = 'Copiado'; }
+    catch (e) { botao.textContent = 'Selecione e copie à mão'; }
+    setTimeout(() => (botao.textContent = antes), 1600);
+  }
+  $('#copiar-meu').onclick = (e) => copiar(ta.value, e.currentTarget);
+  $('#arquivos').addEventListener('click', (e) => { const b = e.target.closest('[data-copiar]'); if (b) copiar($('#arquivos').__lista[+b.dataset.copiar].code, b); });
+
+  rodar();
+})();
+</script>
