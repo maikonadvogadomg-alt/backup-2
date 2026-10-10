@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Playground — MeuIDE</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --panel: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --primary: #1f6feb;
+      --success: #238636;
+    }
+
+    :root.light {
+      --bg: #ffffff;
+      --panel: #f6f8fa;
+      --border: #d0d7de;
+      --text: #24292f;
+      --muted: #57606a;
+      --primary: #0969da;
+      --success: #1a7f0e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, sans-serif;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ===== NAV ===== */
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      height: 44px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+
+    .nav-title {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--primary);
+      white-space: nowrap;
+    }
+
+    .nav-right {
+      margin-left: auto;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      background: var(--panel);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn:hover {
+      background: var(--border);
+    }
+
+    .btn-blue {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+    }
+
+    .btn-blue:hover {
+      background: #388bfd;
+    }
+
+    .btn-green {
+      background: var(--success);
+      color: #fff;
+      border: none;
+    }
+
+    .btn-green:hover {
+      background: #2ea043;
+    }
+
+    /* ===== TOOLBAR ===== */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      overflow-x: auto;
+    }
+
+    .tab-row {
+      display: flex;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .tab-btn {
+      padding: 4px 12px;
+      font-size: 11px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    input[type="text"],
+    input[type="search"] {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 6px;
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+
+    input[type="text"]:focus,
+    input[type="search"]:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    /* ===== MAIN LAYOUT ===== */
+    .main {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .editor-col {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      border-right: 1px solid var(--border);
+      min-width: 0;
+    }
+
+    .preview-col {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .editor-col.hidden {
+      display: none;
+    }
+
+    .preview-col.hidden {
+      display: none;
+    }
+
+    .preview-col.expanded {
+      flex: 2;
+    }
+
+    .col-header {
+      padding: 6px 10px;
+      font-size: 11px;
+      color: var(--muted);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .editor-wrapper {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .line-numbers {
+      width: 40px;
+      padding: 8px 6px;
+      border-right: 1px solid var(--border);
+      color: var(--muted);
+      background: var(--bg);
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      text-align: right;
+      user-select: none;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    textarea {
+      flex: 1;
+      background: var(--bg);
+      color: var(--text);
+      border: none;
+      resize: none;
+      padding: 8px 12px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      outline: none;
+      tab-size: 2;
+    }
+
+    iframe {
+      flex: 1;
+      border: none;
+      background: #fff;
+    }
+
+    /* ===== SNIPPETS SIDEBAR ===== */
+    .snip-sidebar {
+      width: 220px;
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      background: var(--panel);
+      flex-shrink: 0;
+    }
+
+    .snip-sidebar.hidden {
+      display: none;
+    }
+
+    .snip-header {
+      padding: 8px;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .snip-search {
+      padding: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .snip-search input {
+      width: 100%;
+      font-size: 11px;
+    }
+
+    .snip-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .snip-item {
+      padding: 8px 10px;
+      cursor: pointer;
+      font-size: 11px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .snip-item:hover {
+      background: var(--border);
+    }
+
+    .snip-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .snip-title {
+      color: var(--text);
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .snip-date {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .snip-delete {
+      background: none;
+      border: none;
+      color: #f85149;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 0;
+      flex-shrink: 0;
+    }
+
+    .snip-delete:hover {
+      color: #ff7b72;
+    }
+
+    .snip-empty {
+      padding: 12px;
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* ===== MODAL ===== */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 12px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal h2 {
+      margin-bottom: 16px;
+      font-size: 16px;
+    }
+
+    .modal-field {
+      margin-bottom: 12px;
+    }
+
+    .modal-field label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .modal-field textarea {
+      width: 100%;
+      height: 200px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+
+    /* ===== TOAST ===== */
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #fff;
+      display: none;
+      z-index: 99;
+    }
+
+    #toast.show {
+      display: block;
+    }
+
+    #toast.ok {
+      background: var(--success);
+    }
+
+    #toast.err {
+      background: #f85149;
+    }
+
+    /* ===== RESPONSIVO ===== */
+    @media (max-width: 900px) {
+      .btn {
+        padding: 5px 10px;
+        font-size: 11px;
+      }
+
+      .toolbar {
+        gap: 4px;
+        padding: 4px 8px;
+      }
+
+      input[type="text"],
+      input[type="search"] {
+        font-size: 11px;
+        padding: 4px 8px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        height: 40px;
+        padding: 0 8px;
+      }
+
+      .btn {
+        padding: 4px 8px;
+        font-size: 10px;
+      }
+
+      .toolbar {
+        gap: 4px;
+        padding: 4px 6px;
+      }
+
+      .main {
+        flex-direction: column;
+      }
+
+      .editor-col,
+      .preview-col {
+        flex: 1;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .editor-col.hidden,
+      .preview-col.hidden {
+        display: none;
+      }
+
+      .snip-sidebar {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid var(--border);
+        max-height: 200px;
+      }
+
+      .col-header {
+        padding: 4px 8px;
+        font-size: 10px;
+      }
+
+      .line-numbers {
+        width: 32px;
+        padding: 6px 4px;
+        font-size: 11px;
+      }
+
+      textarea {
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+
+      .snip-item {
+        padding: 6px 8px;
+        font-size: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      nav {
+        height: 36px;
+        padding: 0 6px;
+        gap: 4px;
+      }
+
+      .btn {
+        padding: 3px 6px;
+        font-size: 9px;
+      }
+
+      .toolbar {
+        gap: 3px;
+        padding: 3px 4px;
+      }
+
+      textarea {
+        font-size: 11px;
+        line-height: 1.5;
+      }
+
+      .line-numbers {
+        width: 28px;
+        font-size: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <span class="nav-title">🎨 Playground</span>
+    <div class="nav-right">
+      <button class="btn" id="toggleSnippetsBtn" title="Snippets salvos">📂 Salvos</button>
+      <button class="btn" onclick="toggleTheme()" title="Trocar tema">🌙</button>
+      <button class="btn" onclick="logout()">Sair</button>
+    </div>
+  </nav>
+
+  <div class="toolbar">
+    <div class="tab-row">
+      <button class="tab-btn active" id="tab-html" onclick="setTab('html')">HTML</button>
+      <button class="tab-btn" id="tab-css" onclick="setTab('css')">CSS</button>
+      <button class="tab-btn" id="tab-js" onclick="setTab('js')">JS</button>
+    </div>
+
+    <input type="text" id="snip-title" placeholder="Nome do snippet..." style="width: 140px;">
+
+    <button class="btn btn-blue" onclick="run()">▶ Run</button>
+
+    <label style="display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); white-space: nowrap;">
+      <input type="checkbox" id="auto-run" checked style="cursor: pointer;">
+      Auto
+    </label>
+
+    <button class="btn btn-green" onclick="save()">💾 Salvar</button>
+    <button class="btn" onclick="openImportModal()">↑ Import</button>
+    <button class="btn" onclick="copyCode()">⧉ Copiar</button>
+    <button class="btn" onclick="download()">⬇ .html</button>
+    <button class="btn" onclick="resetCode()">↻ Novo</button>
+    <button class="btn" onclick="togglePreviewSize()">↔ Preview</button>
+    <button class="btn" id="toggleViewBtn" onclick="toggleView()" style="display: none;">◄►</button>
+  </div>
+
+  <div class="main">
+    <div class="editor-col" id="editor-col">
+      <div class="col-header">
+        <span id="editor-label">✏️ HTML</span>
+      </div>
+      <div class="editor-wrapper">
+        <div id="lineNumbers" class="line-numbers">1</div>
+        <textarea id="editor" spellcheck="false" oninput="onEdit()" onkeydown="handleTab(event)" placeholder="Digite seu código aqui..."></textarea>
+      </div>
+    </div>
+
+    <div class="preview-col" id="preview-col">
+      <div class="col-header">
+        <span>👁️ Preview ao vivo</span>
+      </div>
+      <iframe id="preview" sandbox="allow-scripts allow-modals allow-forms allow-popups"></iframe>
+    </div>
+
+    <div class="snip-sidebar hidden" id="snip-sidebar">
+      <div class="snip-header">Snippets salvos</div>
+      <div class="snip-search">
+        <input type="search" id="snip-search" placeholder="Pesquisar..." oninput="filterSnippets()">
+      </div>
+      <div id="snip-list" class="snip-list"></div>
+    </div>
+  </div>
+
+  <!-- MODAL IMPORT -->
+  <div class="modal-backdrop" id="importModal">
+    <div class="modal">
+      <h2>Importar Código</h2>
+      <div class="modal-field">
+        <label>Cole seu código aqui:</label>
+        <textarea id="importCode" placeholder="Cole HTML, CSS ou JS..."></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" onclick="closeImportModal()">Cancelar</button>
+        <button class="btn btn-blue" onclick="importCode()">Importar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+  <input id="fileInput" type="file" hidden accept=".html,.css,.js">
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    const sbUrl = localStorage.getItem('sb_url');
+    const sbKey = localStorage.getItem('sb_key');
+    let sb = null;
+    if (sbUrl && sbKey) sb = createClient(sbUrl, sbKey);
+
+    let user = null;
+    let timer = null;
+    let currentTab = 'html';
+    let code = {
+      html: `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { font-family: sans-serif; padding: 20px; background: #f0f4f8; }
+  h1 { color: #2563eb; }
+  button { background: #2563eb; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 15px; cursor: pointer; margin-top: 12px; }
+</style>
+</head>
+<body>
+  <h1>🚀 Playground</h1>
+  <p>Edite o código e veja ao vivo!</p>
+  <button onclick="alert('Funcionou! ✅')">Testar</button>
+</body>
+</html>`,
+      css: '',
+      js: ''
+    };
+    let allSnippets = [];
+
+    // ===== INIT =====
+    async function init() {
+      applyTheme();
+      if (sb) {
+        const { data } = await sb.auth.getUser();
+        user = data?.user || null;
+      }
+      updateLineNumbers();
+      document.getElementById('editor').value = code[currentTab];
+      run();
+      if (sb && user) await loadSnippets();
+      else loadLocalSnippets();
+
+      if (window.innerWidth <= 768) {
+        document.getElementById('toggleViewBtn').style.display = 'inline-block';
+      }
+      window.addEventListener('resize', () => {
+        if (window.innerWidth <= 768) {
+          document.getElementById('toggleViewBtn').style.display = 'inline-block';
+        } else {
+          document.getElementById('toggleViewBtn').style.display = 'none';
+          document.getElementById('editor-col').classList.remove('hidden');
+          document.getElementById('preview-col').classList.remove('hidden');
+        }
+      });
+    }
+
+    // ===== THEME =====
+    window.toggleTheme = () => {
+      const isLight = document.documentElement.classList.toggle('light');
+      localStorage.setItem('playground_theme', isLight ? 'light' : 'dark');
+      document.querySelector('[onclick="toggleTheme()"]').textContent = isLight ? '☀️' : '🌙';
+    };
+
+    function applyTheme() {
+      const theme = localStorage.getItem('playground_theme') || 'dark';
+      document.documentElement.classList.toggle('light', theme === 'light');
+      document.querySelector('[onclick="toggleTheme()"]').textContent = theme === 'light' ? '☀️' : '🌙';
+    }
+
+    // ===== TABS =====
+    window.setTab = (tab) => {
+      code[currentTab] = document.getElementById('editor').value;
+      currentTab = tab;
+
+      const labels = {
+        html: '✏️ HTML',
+        css: '🎨 CSS',
+        js: '📜 JavaScript'
+      };
+
+      document.getElementById('editor-label').textContent = labels[tab];
+      document.getElementById('editor').value = code[tab] || '';
+
+      ['html', 'css', 'js'].forEach(t => {
+        document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+      });
+
+      updateLineNumbers();
+    };
+
+    // ===== LINE NUMBERS =====
+    function updateLineNumbers() {
+      const editor = document.getElementById('editor');
+      const lines = editor.value.split('\n').length;
+      const lineNumbers = Array.from({ length: lines }, (_, i) => i + 1).join('\n');
+      document.getElementById('lineNumbers').textContent = lineNumbers;
+    }
+
+    // ===== PREVIEW =====
+    function buildDoc() {
+      const h = code.html.trim().toLowerCase();
+      if (h.includes('<!doctype') || h.includes('<html')) {
+        return code.html;
+      }
+
+      return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>${code.css}</style>
+</head>
+<body>
+  ${code.html}
+  <script>
+try {
+${code.js}
+} catch(e) {
+  document.body.innerHTML += "<pre style='color:red;padding:20px'>" + e.stack + "</pre>";
+}
+  <\/script>
+</body>
+</html>`;
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    window.run = () => {
+      code[currentTab] = document.getElementById('editor').value;
+
+      const doc = buildDoc();
+      const blob = new Blob([doc], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const frame = document.getElementById('preview');
+
+      if (frame._prev) URL.revokeObjectURL(frame._prev);
+      frame._prev = url;
+      frame.src = url;
+    };
+
+    window.onEdit = () => {
+      updateLineNumbers();
+      if (!document.getElementById('auto-run').checked) return;
+      clearTimeout(timer);
+      timer = setTimeout(run, 600);
+    };
+
+    window.handleTab = (e) => {
+      if (e.key !== 'Tab') return;
+      e.preventDefault();
+      const t = e.target;
+      const s = t.selectionStart;
+      t.value = t.value.substring(0, s) + '  ' + t.value.substring(t.selectionEnd);
+      t.selectionStart = t.selectionEnd = s + 2;
+      onEdit();
+    };
+
+    // ===== ACTIONS =====
+    window.download = () => {
+      code[currentTab] = document.getElementById('editor').value;
+      const title = document.getElementById('snip-title').value || 'playground';
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([buildDoc()], { type: 'text/plain' }));
+      a.download = title + '.html';
+      a.click();
+      toast('✅ Arquivo baixado!');
+    };
+
+    window.copyCode = async () => {
+      code[currentTab] = document.getElementById('editor').value;
+      try {
+        await navigator.clipboard.writeText(buildDoc());
+        toast('✅ Copiado!');
+      } catch {
+        toast('❌ Erro ao copiar', 'err');
+      }
+    };
+
+    window.resetCode = () => {
+      if (!confirm('Descartar código atual?')) return;
+      code = { html: '', css: '', js: '' };
+      document.getElementById('snip-title').value = '';
+      currentTab = 'html';
+      setTab('html');
+      run();
+      toast('✅ Novo código!');
+    };
+
+    window.togglePreviewSize = () => {
+      document.getElementById('preview-col').classList.toggle('expanded');
+    };
+
+    // ===== IMPORT MODAL =====
+    window.openImportModal = () => {
+      document.getElementById('importModal').classList.add('open');
+      document.getElementById('importCode').value = '';
+    };
+
+    window.closeImportModal = () => {
+      document.getElementById('importModal').classList.remove('open');
+    };
+
+    window.importCode = () => {
+      const content = document.getElementById('importCode').value.trim();
+      if (!content) {
+        toast('❌ Cole algum código!', 'err');
+        return;
+      }
+
+      const h = content.toLowerCase();
+      if (h.includes('<!doctype') || h.includes('<html')) {
+        code.html = content;
+        code.css = '';
+        code.js = '';
+        currentTab = 'html';
+      } else if (h.includes('<style') || content.includes('body {') || content.includes('color:')) {
+        code.css = content;
+        currentTab = 'css';
+      } else {
+        code.js = content;
+        currentTab = 'js';
+      }
+
+      setTab(currentTab);
+      run();
+      closeImportModal();
+      toast('✅ Código importado!');
+    };
+
+    // ===== SNIPPETS =====
+    window.save = async () => {
+      code[currentTab] = document.getElementById('editor').value;
+      const title = document.getElementById('snip-title').value.trim() || 'Sem título';
+
+      if (sb && user) {
+        const { error } = await sb.from('snippets').insert({
+          user_id: user.id,
+          title,
+          html: code.html,
+          css: code.css,
+          js: code.js
+        });
+        if (error) {
+          toast('❌ Erro: ' + error.message, 'err');
+          return;
+        }
+        toast('✅ Salvo no Supabase!');
+        await loadSnippets();
+      } else {
+        const local = JSON.parse(localStorage.getItem('snippets') || '[]');
+        local.push({
+          id: Date.now(),
+          title,
+          html: code.html,
+          css: code.css,
+          js: code.js,
+          date: new Date().toISOString()
+        });
+        localStorage.setItem('snippets', JSON.stringify(local));
+        toast('✅ Salvo localmente!');
+        loadLocalSnippets();
+      }
+    };
+
+    async function loadSnippets() {
+      if (!sb || !user) return;
+      const { data } = await sb.from('snippets').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+      allSnippets = data || [];
+      renderSnippets(allSnippets);
+    }
+
+    function loadLocalSnippets() {
+      const local = JSON.parse(localStorage.getItem('snippets') || '[]');
+      allSnippets = local;
+      renderSnippets(allSnippets);
+    }
+
+    function renderSnippets(list) {
+      const html = list.length
+        ? list.map(s => `
+            <div class="snip-item" onclick="loadSnippet(${JSON.stringify(s).replace(/"/g, '&quot;')})">
+              <div class="snip-info">
+                <div class="snip-title">${escapeHtml(s.title)}</div>
+                <div class="snip-date">${s.date ? new Date(s.date).toLocaleDateString('pt-BR') : new Date(s.created_at).toLocaleDateString('pt-BR')}</div>
+              </div>
+              <button class="snip-delete" onclick="event.stopPropagation();deleteSnippet('${s.id}')">✕</button>
+            </div>`)
+          .join('')
+        : '<div class="snip-empty">Nenhum snippet salvo</div>';
+
+      document.getElementById('snip-list').innerHTML = html;
+    }
+
+    window.loadSnippet = (s) => {
+      code.html = s.html || '';
+      code.css = s.css || '';
+      code.js = s.js || '';
+      document.getElementById('snip-title').value = s.title || '';
+      currentTab = 'html';
+      setTab('html');
+      run();
+      toast('✅ Snippet carregado!');
+    };
+
+    window.deleteSnippet = async (id) => {
+      if (!confirm('Deletar snippet?')) return;
+
+      if (sb && user) {
+        await sb.from('snippets').delete().eq('id', id);
+        await loadSnippets();
+      } else {
+        const local = JSON.parse(localStorage.getItem('snippets') || '[]').filter(s => String(s.id) !== String(id));
+        localStorage.setItem('snippets', JSON.stringify(local));
+        loadLocalSnippets();
+      }
+      toast('✅ Deletado!');
+    };
+
+    window.filterSnippets = () => {
+      const term = document.getElementById('snip-search').value.toLowerCase();
+      const filtered = allSnippets.filter(s => s.title.toLowerCase().includes(term));
+      renderSnippets(filtered);
+    };
+
+    document.getElementById('toggleSnippetsBtn').addEventListener('click', () => {
+      const sidebar = document.getElementById('snip-sidebar');
+      sidebar.classList.toggle('hidden');
+      if (!sidebar.classList.contains('hidden')) {
+        loadLocalSnippets();
+      }
+    });
+
+    // ===== MOBILE VIEW TOGGLE =====
+    window.toggleView = () => {
+      const editor = document.getElementById('editor-col');
+      const preview = document.getElementById('preview-col');
+
+      if (editor.classList.contains('hidden')) {
+        editor.classList.remove('hidden');
+        preview.classList.add('hidden');
+      } else {
+        editor.classList.add('hidden');
+        preview.classList.remove('hidden');
+      }
+    };
+
+    function toast(msg, type = 'ok') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'show ' + type;
+      setTimeout(() => (t.className = ''), 3000);
+    }
+
+    window.logout = async () => {
+      if (sb) await sb.auth.signOut();
+      window.location.href = 'index.html';
+    };
+
+    init();
+  </script>
+</body>
+</html>
