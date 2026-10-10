@@ -1,0 +1,99 @@
+🕵️ Perito de Metadados
+Projeto: habit-tracker-corrigido-18 (2) (caminhos consertados)
+Guardado em: 08/10/2026, 13:32:34
+──────────────────────────────────────────────────
+Relatório técnico de análise de metadados
+
+Processo/caso: EXEMPLO FICTÍCIO 0000000-00.0000.0.00.0000. Análise feita em 08/10/2026, 13:32:04, com a ferramenta "Perito de Metadados" versão 1.0, que lê os dados internos dos arquivos sem alterá-los. ATENÇÃO: EXEMPLO FICTÍCIO.
+
+1. Arquivos analisados
+
+O código SHA-256 identifica cada arquivo. Qualquer alteração, mesmo de um só caractere, muda o código. Se o código conferir, o arquivo analisado é o mesmo dos autos.
+
+EXEMPLO-laudo-formalizacao.pdf (PDF, 6,0 KB)
+SHA-256: f15ba73c47d5121ab93da80498309625ab9fa29372a9e5b67593f469dff3331a
+EXEMPLO-selfie-prova-de-vida.jpg (Foto JPEG, 11,4 KB)
+SHA-256: c9effcd8e6e60dda0faf7cc41c58c1620e26337bdee93e33e1fe55d24ebd595d
+2. Achados
+[Forte indício] Localização a 11,6 km da casa do cliente — texto do PDF EXEMPLO-laudo-formalizacao.pdf
+Coordenada -19.815700, -43.954200 (texto do PDF EXEMPLO-laudo-formalizacao.pdf).
+Se o banco afirma que o cliente fez tudo em casa, a localização teria que bater com o endereço. Localização por IP ou antena aponta o equipamento da operadora, muitas vezes em outra cidade, e não prova onde a pessoa estava.
+[Forte indício] Localização a 11,6 km da casa do cliente — GPS da foto EXEMPLO-selfie-prova-de-vida.jpg
+Coordenada -19.815700, -43.954200 (GPS da foto EXEMPLO-selfie-prova-de-vida.jpg).
+Se o banco afirma que o cliente fez tudo em casa, a localização teria que bater com o endereço. Localização por IP ou antena aponta o equipamento da operadora, muitas vezes em outra cidade, e não prova onde a pessoa estava.
+[Atenção] Documento modificado depois de criado — EXEMPLO-laudo-formalizacao.pdf
+Criado em 10/03/2022 14:06:00 (Brasília) e modificado em 15/01/2024 09:30:12 (Brasília): 675 dias (cerca de 22 meses) depois.
+O documento não é o mesmo que foi gerado no primeiro momento. Peça a versão original e a explicação do que mudou.
+[Atenção] O PDF foi salvo 2 vezes — EXEMPLO-laudo-formalizacao.pdf
+Cada salvamento acrescentou conteúdo no fim do arquivo. As versões anteriores continuam dentro dele.
+Mostra que o documento foi alterado depois de pronto. A versão anterior pode revelar o que foi trocado.
+[Atenção] Dado interno trocado entre salvamentos: Producer — EXEMPLO-laudo-formalizacao.pdf
+Antes: "FormalizaDigital Engine 3.2 (exemplo)". Depois: "Microsoft® Word para Microsoft 365".
+O documento passou por outro programa depois de gerado.
+[Atenção] Dado interno trocado entre salvamentos: Creator — EXEMPLO-laudo-formalizacao.pdf
+Antes: "FormalizaDigital". Depois: "Microsoft® Word para Microsoft 365".
+O documento passou por outro programa depois de gerado.
+[Atenção] Os dados internos se contradizem (programa) — EXEMPLO-laudo-formalizacao.pdf
+Info diz "Microsoft® Word para Microsoft 365"; XMP diz "FormalizaDigital Engine 3.2 (exemplo)".
+O PDF guarda o programa em dois lugares. Quando não batem, o arquivo foi mexido por um programa que atualizou só um deles.
+[Atenção] Os dados internos se contradizem (data de modificação) — EXEMPLO-laudo-formalizacao.pdf
+Info: 15/01/2024 09:30:12 (Brasília). XMP: 10/03/2022 14:06:00 (Brasília).
+As duas cópias da mesma data deveriam ser iguais.
+[Atenção] Feito ou passado por programa de edição: Microsoft® Word para Microsoft 365 — EXEMPLO-laudo-formalizacao.pdf
+O documento foi digitado num editor de texto, não gerado pelo sistema que registrou a biometria/assinatura.
+Um laudo ou "dossiê de formalização" digitado ou editado à mão não é registro automático do sistema. Peça o registro original (log) gerado na hora.
+[Atenção] Foto em preto e branco — EXEMPLO-laudo-formalizacao.pdf › Imagem 1 dentro do PDF
+Espaço de cor no PDF: DeviceGray. A imagem não tem cor.
+Câmera de celular tira foto colorida. Converter para preto e branco apaga informação de cor e luz, que ajuda a mostrar montagem. Peça a foto original colorida.
+[Atenção] Foto salva de novo depois de tirada — EXEMPLO-selfie-prova-de-vida.jpg
+Tirada em 10/03/2022 14:05:12 (Brasília); salva em 11/03/2022 09:12:40 (sem fuso) (19 horas depois).
+A câmera grava as duas datas iguais. Diferença indica que a foto foi reaberta e salva.
+[Atenção] Localização por rede, não por satélite — EXEMPLO-selfie-prova-de-vida.jpg
+Método gravado: "NETWORK".
+Localização por rede (antena ou Wi-Fi) é aproximada e pode errar por quilômetros. Não prova onde a pessoa estava.
+[Atenção] Mesmo aparelho com versões de sistema diferentes — Comparação entre arquivos
+samsung SM-A105M: "A105MUBS1ATB2" e "A105MUBS2BUB1".
+Um mesmo celular não troca de versão no meio de um atendimento. Indica fotos de momentos diferentes ou de aparelhos diferentes com o mesmo nome.
+[Informação] Sem assinatura digital — EXEMPLO-laudo-formalizacao.pdf
+Não encontrei assinatura digital (ICP-Brasil ou outra) dentro do PDF.
+Se o banco alega "assinatura eletrônica", o PDF não carrega prova técnica dela. Peça o log de auditoria original.
+[Informação] Endereço(s) IP: 177.12.34.56 — texto do PDF EXEMPLO-laudo-formalizacao.pdf
+O IP identifica a operadora de internet, não a casa. Para saber quem usava aquele IP, o juízo pode oficiar a operadora (Marco Civil da Internet, art. 22) informando IP, data, hora com fuso e porta lógica.
+3. Linha do tempo dos dados internos
+10/03/2022 — Data do contrato (informada por você) (Dados do caso)
+10/03/2022 14:05:00 (Brasília) — Prova de vida / assinatura alegada (informada por você) (Dados do caso)
+10/03/2022 14:05:12 (sem fuso) — Foto tirada (EXEMPLO-laudo-formalizacao.pdf › Imagem 1 dentro do PDF)
+10/03/2022 14:05:12 (sem fuso) — Foto salva/modificada (EXEMPLO-laudo-formalizacao.pdf › Imagem 1 dentro do PDF)
+10/03/2022 14:05:12 (Brasília) — Foto tirada (EXEMPLO-selfie-prova-de-vida.jpg)
+10/03/2022 17:05:12 (UTC+00:00) — Horário do GPS (satélite, UTC) (EXEMPLO-selfie-prova-de-vida.jpg)
+10/03/2022 14:06:00 (Brasília) — PDF criado (salvamento 1) (EXEMPLO-laudo-formalizacao.pdf)
+10/03/2022 14:06:00 (Brasília) — PDF modificado (salvamento 1) (EXEMPLO-laudo-formalizacao.pdf)
+10/03/2022 14:06:00 (Brasília) — PDF criado (salvamento 2) (EXEMPLO-laudo-formalizacao.pdf)
+10/03/2022 14:06:00 (Brasília) — Criação segundo o XMP (EXEMPLO-laudo-formalizacao.pdf)
+10/03/2022 14:06:00 (Brasília) — Modificação segundo o XMP (EXEMPLO-laudo-formalizacao.pdf)
+11/03/2022 09:12:40 (sem fuso) — Foto salva/modificada (EXEMPLO-selfie-prova-de-vida.jpg)
+15/01/2024 09:30:12 (Brasília) — PDF modificado (salvamento 2) (EXEMPLO-laudo-formalizacao.pdf)
+4. Localizações
+
+Endereço do cliente: Rua Exemplo, 100 - Belo Horizonte (fictício) — coordenada -19.919100, -43.938600.
+
+-19.815700, -43.954200 (texto do PDF EXEMPLO-laudo-formalizacao.pdf): 11,6 km do endereço do cliente — https://www.google.com/maps?q=-19.815700,-43.954200
+-19.815700, -43.954200 (GPS da foto EXEMPLO-selfie-prova-de-vida.jpg): 11,6 km do endereço do cliente — https://www.google.com/maps?q=-19.815700,-43.954200
+
+Observação: localização obtida por IP ou por antena (rede) indica a posição aproximada do equipamento da operadora, não a do usuário.
+
+5. Como o juízo pode conferir sozinho
+Código do arquivo (SHA-256): no Windows, abra o "Prompt de Comando" e digite certutil -hashfile "arquivo.pdf" SHA256. No Linux ou Mac: sha256sum arquivo.pdf. O resultado deve ser igual ao do item 1.
+Todos os metadados: programa gratuito ExifTool (exiftool.org), comando exiftool -a -G1 -s "arquivo.pdf". Mostra programa, datas, aparelho, GPS e versões anteriores (o "-a" exibe as duplicadas).
+Versões anteriores do PDF: exiftool -PDF-update:all "arquivo.pdf" mostra o que mudou em cada salvamento. A quantidade de salvamentos é a quantidade de marcas "%%EOF" no arquivo.
+Assinatura digital: validador oficial do ITI, validar.iti.gov.br.
+Edição de foto (ELA): site fotoforensics.com, enviando a foto original.
+Esta ferramenta: abrir o arquivo "Perito de Metadados" no navegador e escolher os mesmos arquivos. O resultado é o mesmo, sem internet.
+6. Pedidos sugeridos ao juízo
+Exibição, pelo réu, dos arquivos originais (art. 396 do CPC): selfie/foto exatamente como capturada, com metadados, e documento em formato nativo.
+Exibição do log de auditoria completo: IP e porta lógica, data e hora com fuso, modelo e identificador do aparelho, sistema operacional e versão do aplicativo, método e precisão (em metros) da geolocalização.
+Ofício à operadora de internet para identificar o usuário do IP na data e hora informadas (Marco Civil da Internet, arts. 10 e 22).
+Perícia técnica nos arquivos digitais (art. 464 do CPC; no criminal, art. 159 do CPP), com os quesitos: o arquivo foi alterado depois de gerado? Por qual programa? A foto foi editada, convertida ou capturada por emulador? A localização é por satélite ou por rede, e qual a precisão?
+7. Limites desta análise
+
+Esta é uma análise técnica indicativa, feita por software, sobre os dados gravados nos próprios arquivos. Ela aponta contradições e indícios, mas não substitui a perícia oficial. Metadados podem faltar por motivos normais (alguns sistemas apagam), por isso a ausência de um dado não é, sozinha, prova de fraude. Já a contradição entre dados gravados no mesmo arquivo é objetiva e verificável por qualquer pessoa com as ferramentas do item 5.
