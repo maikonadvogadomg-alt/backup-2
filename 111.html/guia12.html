@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📖 Guia Hub Jurídico - Passo a Passo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1a1f3a 100%);
+            color: #e2e8f0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        /* HEADER */
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+
+        header {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border: 2px solid #3b82f6;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            color: #3b82f6;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #94a3b8;
+            font-size: 16px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        /* NAVEGAÇÃO */
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+
+        nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            padding: 12px 20px;
+            background: #1e293b;
+            border: 2px solid #334155;
+            color: #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #334155;
+            border-color: #3b82f6;
+        }
+
+        .nav-btn.active {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        /* CONTEÚDO */
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+
+        .content {
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content h2 {
+            color: #3b82f6;
+            font-size: 28px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        /* CARDS */
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+
+        .card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .card h3 {
+            color: #3b82f6;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .card p {
+            color: #94a3b8;
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .card ul, .card ol {
+            margin-left: 20px;
+            color: #94a3b8;
+            line-height: 1.8;
+        }
+
+        .card li {
+            margin-bottom: 8px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        /* ALERTAS */
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+
+        .alert {
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .alert-info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 2px solid #3b82f6;
+            color: #3b82f6;
+        }
+
+        .alert-success {
+            background: rgba(34, 197, 94, 0.1);
+            border: 2px solid #22c55e;
+            color: #22c55e;
+        }
+
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border: 2px solid #f59e0b;
+            color: #f59e0b;
+        }
+
+        .alert-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .alert-content p {
+            margin: 0;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        /* CÓDIGO */
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+
+        .code-block {
+            background: #0a0e1a;
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #a1a1a1;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        /* GRID */
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .grid-item {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .grid-item h4 {
+            color: #3b82f6;
+            margin-bottom: 8px;
+        }
+
+        .grid-item p {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        /* PASSOS */
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+
+        .steps {
+            display: grid;
+            gap: 16px;
+        }
+
+        .step {
+            background: #0f172a;
+            border-left: 4px solid #3b82f6;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            gap: 16px;
+        }
+
+        .step-number {
+            background: #3b82f6;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            color: #3b82f6;
+            margin-bottom: 8px;
+        }
+
+        .step-content p {
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        /* BOTÕES */
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1e40af;
+        }
+
+        .btn-secondary {
+            background: #334155;
+            color: #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #475569;
+        }
+
+        .btn-success {
+            background: #22c55e;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #16a34a;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        /* TABELA */
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+        }
+
+        th {
+            background: #0f172a;
+            color: #3b82f6;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #334155;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #334155;
+            color: #94a3b8;
+        }
+
+        tr:hover {
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        /* FOOTER */
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+
+        footer {
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            color: #94a3b8;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+        /* RESPONSIVO */
+        /* ═══════════════════════════════════════════════════════════════════════════ */
+
+        @media (max-width: 768px) {
+            header {
+                padding: 20px;
+            }
+
+            header h1 {
+                font-size: 24px;
+            }
+
+            nav {
+                flex-direction: column;
+            }
+
+            .nav-btn {
+                width: 100%;
+            }
+
+            .step {
+                flex-direction: column;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+    <!-- HEADER -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+    <header>
+        <h1>📖 Guia Hub Jurídico</h1>
+        <p>Aprenda a usar o Hub Jurídico passo a passo</p>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+    <!-- NAVEGAÇÃO -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+    <nav>
+        <button class="nav-btn active" onclick="showContent('inicio')">🎯 Início</button>
+        <button class="nav-btn" onclick="showContent('projetos')">📁 Projetos</button>
+        <button class="nav-btn" onclick="showContent('editor')">✏️ Editor</button>
+        <button class="nav-btn" onclick="showContent('ia')">🤖 IA</button>
+        <button class="nav-btn" onclick="showContent('gerador')">🔧 Gerador</button>
+        <button class="nav-btn" onclick="showContent('github')">🌐 GitHub</button>
+        <button class="nav-btn" onclick="showContent('faq')">❓ FAQ</button>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+    <!-- CONTEÚDO: INÍCIO -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+    <div id="inicio" class="content active">
+        <h2>🎯 Bem-vindo ao Hub Jurídico!</h2>
+
+        <div class="alert alert-info">
+            <div class="alert-icon">ℹ️</div>
+            <div class="alert-content">
+                <p><strong>Este guia vai te ajudar a entender todas as funcionalidades do Hub Jurídico.</strong> Clique nos botões acima para navegar pelas seções.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>O que é o Hub Jurídico?</h3>
+            <p>O Hub Jurídico é uma plataforma completa para gerenciar projetos jurídicos com:</p>
+            <ul>
+                <li>✅ Editor de código integrado</li>
+                <li>✅ IA para análise jurídica</li>
+                <li>✅ Sincronização com GitHub</li>
+                <li>✅ Geração de APK/PWA/Desktop</li>
+                <li>✅ Gerenciamento de projetos</li>
+                <li>✅ Validação automática</li>
+            </ul>
+        </div>
+
+        <div class="grid">
+            <div class="grid-item">
+                <h4>📁 Projetos</h4>
+                <p>Crie e gerencie seus projetos jurídicos</p>
+            </div>
+            <div class="grid-item">
+                <h4>✏️ Editor</h4>
+                <p>Edite código com destaque de sintaxe</p>
+            </div>
+            <div class="grid-item">
+                <h4>🤖 IA</h4>
+                <p>Análise inteligente de código</p>
+            </div>
+            <div class="grid-item">
+                <h4>🔧 Gerador</h4>
+                <p>Gere APK, PWA e Desktop</p>
+            </div>
+            <div class="grid-item">
+                <h4>🌐 GitHub</h4>
+                <p>Sincronize com repositórios</p>
+            </div>
+            <div class="grid-item">
+                <h4>📊 Validação</h4>
+                <p>Valide seus projetos</p>
+            </div>
+        </div>
+
+        <div class="alert alert-success">
+            <div class="alert-icon">✅</div>
+            <div class="alert-content">
+                <p><strong>Comece agora!</strong> Clique em "📁 Projetos" para criar seu primeiro projeto.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+    <!-- CONTEÚDO: PROJETOS -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+    <div id="projetos" class="content">
+        <h2>📁 Gerenciando Projetos</h2>
+
+        <div class="alert alert-info">
+            <div class="alert-icon">ℹ️</div>
+            <div class="alert-content">
+                <p><strong>Projetos</strong> são a base do Hub Jurídico. Cada projeto contém arquivos, configurações e dados.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Como Criar um Novo Projeto?</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Clique em "📁 Projetos"</h4>
+                        <p>Na barra lateral esquerda, selecione a opção Projetos</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Clique em "+ Novo Projeto"</h4>
+                        <p>Você verá um botão para criar um novo projeto</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Preencha os Dados</h4>
+                        <p>Digite o nome, descrição e configurações do seu projeto</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Clique em "Criar"</h4>
+                        <p>Seu projeto será criado e você poderá começar a trabalhar</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Campos do Projeto</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Campo</th>
+                        <th>Descrição</th>
+                        <th>Exemplo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Nome</strong></td>
+                        <td>Nome do seu projeto</td>
+                        <td>Meu Projeto Jurídico</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Descrição</strong></td>
+                        <td>O que o projeto faz</td>
+                        <td>Gerenciador de contratos</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ID (Package)</strong></td>
+                        <td>Identificador único</td>
+                        <td>com.app.meu_projeto</td>
+                    </tr>
+                    <tr>
+                        <td><strong>API Min</strong></td>
+                        <td>Versão Android mínima</td>
+                        <td>21</td>
+                    </tr>
+                    <tr>
+                        <td><strong>API Max</strong></td>
+                        <td>Versão Android máxima</td>
+                        <td>33</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Orientação</strong></td>
+                        <td>Retrato ou Paisagem</td>
+                        <td>portrait</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="alert alert-warning">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <p><strong>Dica:</strong> O ID do projeto deve ser único e seguir o padrão com.app.nome_projeto</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+    <!-- CONTEÚDO: EDITOR -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+    <div id="editor" class="content">
+        <h2>✏️ Editando Arquivos</h2>
+
+        <div class="alert alert-info">
+            <div class="alert-icon">ℹ️</div>
+            <div class="alert-content">
+                <p><strong>O Editor</strong> permite editar todos os arquivos do seu projeto com destaque de sintaxe.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Como Editar um Arquivo?</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Selecione um Projeto</h4>
+                        <p>Clique em um projeto na lista de projetos</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Clique em "✏️ Editor"</h4>
+                        <p>Na barra lateral, selecione a opção Editor</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Escolha um Arquivo</h4>
+                        <p>Clique em um arquivo na lista para abrir no editor</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Edite e Salve</h4>
+                        <p>Faça suas alterações e clique em "💾 Salvar"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Tipos de Arquivo Suportados</h3>
+            <ul>
+                <li>📄 <strong>HTML</strong> - Estrutura da página</li>
+                <li>🎨 <strong>CSS</strong> - Estilos</li>
+                <li>⚙️ <strong>JavaScript</strong> - Lógica</li>
+                <li>📦 <strong>JSON</strong> - Configurações</li>
+                <li>📝 <strong>Markdown</strong> - Documentação</li>
+                <li>⚖️ <strong>Jurídico</strong> - Documentos legais</li>
+            </ul>
+        </div>
+
+        <div class="alert alert-success">
+            <div class="alert-icon">✅</div>
+            <div class="alert-content">
+                <p><strong>Dica:</strong> Use Ctrl+S para salvar rapidamente!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+    <!-- CONTEÚDO: IA -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+    <div id="ia" class="content">
+        <h2>🤖 Usando a IA</h2>
+
+        <div class="alert alert-info">
+            <div class="alert-icon">ℹ️</div>
+            <div class="alert-content">
+                <p><strong>A IA</strong> ajuda a analisar, validar e melhorar seu código jurídico.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Funcionalidades da IA</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">📖</div>
+                    <div class="step-content">
+                        <h4>Analisar Código</h4>
+                        <p>Receba análise detalhada do seu código</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">✅</div>
+                    <div class="step-content">
+                        <h4>Validar Conformidade</h4>
+                        <p>Verifique se o código segue as normas jurídicas</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">💡</div>
+                    <div class="step-content">
+                        <h4>Sugerir Melhorias</h4>
+                        <p>Obtenha recomendações de otimização</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">🔍</div>
+                    <div class="step-content">
+                        <h4>Revisar Documentação</h4>
+                        <p>Valide documentação e comentários</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Como Usar a IA?</h3>
+            <ol>
+                <li>Clique em "🤖 IA" na barra lateral</li>
+                <li>Escolha uma função (Analisar, Validar, etc)</li>
+                <li>Cole seu código ou selecione um arquivo</li>
+                <li>Clique em "Analisar"</li>
+                <li>Aguarde o resultado da IA</li>
+                <li>Implemente as sugestões</li>
+            </ol>
+        </div>
+
+        <div class="alert alert-warning">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <p><strong>Nota:</strong> A IA funciona melhor com código bem estruturado e comentado.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+    <!-- CONTEÚDO: GERADOR -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+    <div id="gerador" class="content">
+        <h2>🔧 Gerando Aplicativos</h2>
+
+        <div class="alert alert-info">
+            <div class="alert-icon">ℹ️</div>
+            <div class="alert-content">
+                <p><strong>O Gerador</strong> cria APK, PWA e versões desktop do seu projeto.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Tipos de Geração</h3>
+            <div class="grid">
+                <div class="grid-item">
+                    <h4>📱 Capacitor</h4>
+                    <p>Gera APK para Android e iOS</p>
+                </div>
+                <div class="grid-item">
+                    <h4>🍎 EAS</h4>
+                    <p>Expo Application Services</p>
+                </div>
+                <div class="grid-item">
+                    <h4>🖥️ Electron</h4>
+                    <p>Aplicativo Desktop (Windows, Mac, Linux)</p>
+                </div>
+                <div class="grid-item">
+                    <h4>🌐 PWA</h4>
+                    <p>Progressive Web App</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Como Gerar um APK?</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Clique em "🔧 Gerador"</h4>
+                        <p>Na barra lateral, selecione Gerador</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Escolha "📱 Capacitor"</h4>
+                        <p>Selecione a opção de geração APK</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Configure as Opções</h4>
+                        <p>Defina versão, permissões, ícones, etc</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Clique em "Gerar"</h4>
+                        <p>Aguarde a geração e baixe o arquivo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-success">
+            <div class="alert-icon">✅</div>
+            <div class="alert-content">
+                <p><strong>Dica:</strong> Valide seu projeto antes de gerar para evitar erros!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+    <!-- CONTEÚDO: GITHUB -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+    <div id="github" class="content">
+        <h2>🌐 Sincronizando com GitHub</h2>
+
+        <div class="alert alert-info">
+            <div class="alert-icon">ℹ️</div>
+            <div class="alert-content">
+                <p><strong>GitHub</strong> permite fazer backup e compartilhar seu projeto.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Como Sincronizar com GitHub?</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Crie um Repositório</h4>
+                        <p>Acesse github.com e crie um novo repositório</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Clique em "🌐 Repositório"</h4>
+                        <p>Na barra lateral, selecione Repositório</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Conecte sua Conta</h4>
+                        <p>Faça login com sua conta GitHub</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Sincronize</h4>
+                        <p>Clique em "Sincronizar" para enviar seu projeto</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Benefícios do GitHub</h3>
+            <ul>
+                <li>💾 Backup automático do seu projeto</li>
+                <li>🔄 Sincronização entre dispositivos</li>
+                <li>👥 Compartilhe com outros desenvolvedores</li>
+                <li>📊 Histórico de alterações</li>
+                <li>🔐 Segurança dos dados</li>
+            </ul>
+        </div>
+
+        <div class="alert alert-warning">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <p><strong>Importante:</strong> Nunca compartilhe dados sensíveis no GitHub público!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+    <!-- CONTEÚDO: FAQ -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+    <div id="faq" class="content">
+        <h2>❓ Perguntas Frequentes</h2>
+
+        <div class="card">
+            <h3>Como faço backup do meu projeto?</h3>
+            <p>Você pode fazer backup de duas formas:</p>
+            <ol>
+                <li>Sincronizando com GitHub (automático)</li>
+                <li>Exportando o projeto como ZIP</li>
+            </ol>
+        </div>
+
+        <div class="card">
+            <h3>Posso editar múltiplos arquivos ao mesmo tempo?</h3>
+            <p>Sim! O editor permite abrir múltiplas abas. Clique no arquivo para alternar entre eles.</p>
+        </div>
+
+        <div class="card">
+            <h3>Como faço para gerar um APK assinado?</h3>
+            <p>No Gerador, selecione "Capacitor" e marque a opção "Gerar APK Assinado". Você precisará fornecer sua chave de assinatura.</p>
+        </div>
+
+        <div class="card">
+            <h3>A IA pode revisar meu código jurídico?</h3>
+            <p>Sim! A IA pode analisar, validar e sugerir melhorias no seu código jurídico. Use a função "Analisar Código" no módulo IA.</p>
+        </div>
+
+        <div class="card">
+            <h3>Como importo um projeto existente?</h3>
+            <p>Clique em "📁 Projetos" e depois em "Importar Projeto". Selecione um arquivo ZIP ou conecte um repositório GitHub.</p>
+        </div>
+
+        <div class="card">
+            <h3>Meu projeto não está salvando. O que faço?</h3>
+            <p>Tente:</p>
+            <ol>
+                <li>Recarregar a página (F5)</li>
+                <li>Verificar sua conexão com a internet</li>
+                <li>Limpar cache do navegador</li>
+                <li>Contatar suporte se o problema persistir</li>
+            </ol>
+        </div>
+
+        <div class="card">
+            <h3>Posso usar o Hub Jurídico offline?</h3>
+            <p>Sim! O Hub Jurídico é um PWA e funciona offline. Seus dados serão sincronizados quando você voltar online.</p>
+        </div>
+
+        <div class="card">
+            <h3>Como obtenho suporte?</h3>
+            <p>Você pode:</p>
+            <ul>
+                <li>📧 Enviar email para suporte@hubjuridico.com</li>
+                <li>💬 Abrir uma issue no GitHub</li>
+                <li>📞 Ligar para nosso suporte técnico</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+    <!-- FOOTER -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+    <footer>
+        <p>📖 Hub Jurídico - Guia Completo | © 2024 | Todos os direitos reservados</p>
+    </footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- SCRIPT -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+
+<script>
+    function showContent(id) {
+        // Esconder todos os conteúdos
+        const contents = document.querySelectorAll('.content');
+        contents.forEach(content => content.classList.remove('active'));
+
+        // Mostrar conteúdo selecionado
+        document.getElementById(id).classList.add('active');
+
+        // Atualizar botões ativos
+        const buttons = document.querySelectorAll('.nav-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+
+        // Scroll para o topo
+        window.scrollTo(0, 0);
+    }
+</script>
+
+</body>
+</html>
